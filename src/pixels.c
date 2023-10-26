@@ -57,34 +57,12 @@ void rgb_to_hex(int r, int g, int b, char *hex) {
 
 
 
-int pixels_to_tiles_by_bin(char *image_path,Tile ***pixel_tiles,int *pixel_width,int *pixel_height, int world_width,int world_height,char* ctile_array_path,char *index_array_path){
+int pixels_to_tiles_by_bin(const unsigned char* image,Tile ***pixel_tiles,int pixel_width,int pixel_height,char* ctile_array_path,char *index_array_path){
     int channels = 4; // RGBA
-
-    // 进行图像缩小和转换
-    unsigned char* image = NULL;
-    unsigned src_width, src_height;
-
-    // 加载图片
-    unsigned error = lodepng_decode32_file(&image, &src_width, &src_height, image_path);
-    if (error) {
-        printf("Error %u: %s\n", error, lodepng_error_text(error));
-        return -1;
+    *pixel_tiles = malloc(pixel_width * sizeof(Tile *));
+    for (int i = 0; i < pixel_width; i++) {
+        (*pixel_tiles)[i] = malloc(pixel_height * sizeof(Tile));
     }
-
-    printf("src_width: %d, src_height: %d\n", src_width, src_height);
-    *pixel_width = src_width;
-    *pixel_height = src_height;
-    // 如果比地图还大，直接结束
-    if (src_width > world_width || src_height > world_height){
-        return -1;
-    }
-    *pixel_tiles = malloc(src_width * sizeof(Tile *));
-    for (int i = 0; i < src_width; i++) {
-        (*pixel_tiles)[i] = malloc(src_height * sizeof(Tile));
-    }
-
-
-
 
     uint16_t ctile_array_size;
     // 从文件中读取ctile_array
@@ -124,15 +102,22 @@ int pixels_to_tiles_by_bin(char *image_path,Tile ***pixel_tiles,int *pixel_width
     // 关闭文件
     fclose(fp);
 
-    for (int x = 0; x < src_width; x++) { // 先遍历列
-        for (int y = 0; y < src_height; y++) { // 再遍历行
-            int i = (y * src_width + x) * channels;
+    for (int x = 0; x < pixel_width; x++) { // 先遍历列
+        for (int y = 0; y < pixel_height; y++) { // 再遍历行
+            int i = (y * pixel_width + x) * channels;
             uint16_t index =  ctile_index[image[i]][image[i+1]][image[i+2]];
             (*pixel_tiles)[x][y] = new_tile_from_ctile(ctile_array[index]);
         }
 
     }
     free(ctile_array);
+    for (int i = 0; i < 256; i++) {
+        for (int j = 0; j < 256; j++) {
+            free(ctile_index[i][j]);
+        }
+        free(ctile_index[i]);
+    }
+    free(ctile_index);
     return 0;
 }
 
@@ -154,6 +139,8 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     tiles_data = read_sections(fp, format.pointers[1], format.pointers[2], &data_length);
     if (tiles_data == NULL) {
         printf("无法读取瓦片数据\n");
+        free_format(&format);
+        free_header(&header);
         return ;
     }
     // print_header(&header);
@@ -163,6 +150,9 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     other_data = read_sections(fp, format.pointers[2], format.pointers[10], &other_data_length);
     if (other_data == NULL) {
         printf("无法读取其他数据\n");
+        free_format(&format);
+        free_header(&header);
+        free(tiles_data);
         return ;
     }
     fclose(fp);
@@ -171,9 +161,41 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     parse_tiles_2D(&tiles,format.tileframeimportant,(uint32_t *)&header.Width, (uint32_t *)&header.Height,tiles_data);
 
     Tile **pixel_tiles ;
-    int pxiel_width;
+    int pixel_width;
     int pixel_height;
-    int res = pixels_to_tiles_by_bin(image_path,&pixel_tiles,&pxiel_width,&pixel_height,header.Width,header.Height,ctile_array_path,index_array_path);
+
+    unsigned char* image = NULL;
+
+    // 加载图片
+    unsigned error = lodepng_decode32_file(&image, &pixel_width, &pixel_height, image_path);
+    if (error) {
+        printf("Error %u: %s\n", error, lodepng_error_text(error));
+        free_format(&format);
+        free_header(&header);
+        free(tiles_data);
+        free(other_data);
+        for (int i = 0;i<header.Width;i++){
+            free(tiles[i]);
+        }
+
+        return ;
+    }
+
+    // 如果比地图还大，直接结束
+    if (pixel_width > header.Width || pixel_height > header.Height){
+        free_format(&format);
+        free_header(&header);
+        free(tiles_data);
+        free(other_data);
+        for (int i = 0;i<header.Width;i++){
+            free(tiles[i]);
+        }
+        free(image);
+        return ;
+
+    }
+
+    int res = pixels_to_tiles_by_bin(image,&pixel_tiles,pixel_width,pixel_height,ctile_array_path,index_array_path);
     // int res = pixels_to_tiles_by_thread(image_path,&pixel_tiles,&pxiel_width,&pixel_height,header.Width,header.Height,format.tileframeimportant, ".\\wld\\TempJson.json", FIND_BLOCK_ONLY);
     if (res !=0){
         printf("图片太大了，超出了地图大小  %d\n",res);
@@ -181,7 +203,7 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     }
 
 
-    copy_tiles(tiles,header.Width,header.Height,pixel_tiles,pxiel_width,pixel_height,pos_x,pos_y);
+    copy_tiles(tiles,header.Width,header.Height,pixel_tiles,pixel_width,pixel_height,pos_x,pos_y);
 
     uint8_t *new_tiles_data;
     size_t new_tiles_lenght =  write_tiles_2D_data_to_buffer(tiles, header.Width,header.Height,&new_tiles_data,&format);
@@ -215,11 +237,21 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     fclose(new_fp);
 
     free(new_tiles_data);
+    for (int i = 0; i < pixel_width; i++) {
+        free(pixel_tiles[i]);
+    }
+    free(pixel_tiles);
+
+    for (int i = 0;i<header.Width;i++){
+        free(tiles[i]);
+    }
     free(tiles);
     free(tiles_data);
     free(other_data);
     free_format(&format);
     free_header(&header);
+    free(image);
+
 }
 
 

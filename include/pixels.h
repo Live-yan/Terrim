@@ -38,7 +38,7 @@ typedef enum {
 
 
 int init_colors_array( FindMode mode);
-int pixels_to_tiles_by_bin(char *image_path,Tile ***pixel_tiles,int *pixel_width,int *pixel_height, int world_width,int world_height,char* ctile_array_path,char *index_array_path);
+int pixels_to_tiles_by_bin(const unsigned char* image,Tile ***pixel_tiles,int pixel_width,int pixel_height,char* ctile_array_path,char *index_array_path);
 Tile new_tile_from_ctile(CTile ctile);
 void create_pixels_worlds(const char *world_name,const char *image_path,const char *save_path,const char *ctile_array_path,const char *index_array_path,int pos_x,int pos_y);
 void copy_tiles(Tile **tiles,int width,int height, Tile **pixel_tiles,int pixel_width,int pixle_height, int x, int y);
