@@ -1,0 +1,195 @@
+/**
+ * Author: YanHua
+ * Contact: 2324281453@qq.com
+ * Build Tool: CMake
+ */
+#ifndef HEADER_H
+#define HEADER_H
+
+#include <stdio.h>
+#include <stdint.h>
+#include <cstring.h>
+#include <format.h>
+typedef struct {
+    Base128Varint Name;
+    Base128Varint Seed;
+    uint64_t Genversion;
+    char UUID[37];
+    uint32_t WorldId;
+    uint32_t Rect[4];
+    uint32_t Height;
+    uint32_t Width;
+    uint32_t Gamemode;
+    uint8_t Drunkworld;
+    uint8_t Goodworld;
+    uint8_t Tenthanniversary;
+    uint8_t Dontstarve;
+    uint8_t Notthebees;
+    uint8_t Remixworld;
+    uint8_t Notrapsworld;
+    uint8_t Zenithworld;
+    int64_t Creationtime;
+    uint8_t Moontype;
+    uint32_t Treex[3];
+    uint32_t TreeStyle[4];
+    uint32_t Caveback[3];
+    uint32_t Cavebackstyle[4];
+    uint32_t Icebackstyle;
+    uint32_t Junglebackstyle;
+    uint32_t Hellbackstyle;
+    int32_t SpawnTileX;
+    int32_t SpawnTileY;
+    double Worldsurface;
+    double Rocklayer;
+    double Gametime;
+    uint8_t Isdaytime;
+    uint32_t Moonphase;
+    uint8_t Bloodmoon;
+    uint8_t Eclipse;
+    int32_t DungeonX;
+    int32_t DungeonY;
+    uint8_t Crimson;
+    uint8_t DownedBoss1;
+    uint8_t DownedBoss2;
+    uint8_t DownedBoss3;
+    uint8_t DownedQueenBee;
+    uint8_t DownedMechBoss1;
+    uint8_t DownedMechBoss2;
+    uint8_t DownedMechBoss3;
+    uint8_t DownedMechBossAny;
+    uint8_t DownedPlantBoss;
+    uint8_t DownedGolemBoss;
+    uint8_t DownedSlimeKing;
+    uint8_t SavedGoblin;
+    uint8_t SavedWizard;
+    uint8_t SavedMech;
+    uint8_t DownedGoblins;
+    uint8_t DownedClown;
+    uint8_t DownedFrost;
+    uint8_t DownedPirates;
+    uint8_t ShadowOrbSmashed;
+    uint8_t SpawnMeteor;
+    uint8_t ShadowOrbCount;
+    uint32_t AltarCount;
+    uint8_t HardMode;
+    uint8_t AfterPartyOfDoom;
+    uint32_t InvasionDelay;
+    uint32_t InvasionSize;
+    uint32_t InvasionType;
+    double InvasionX;
+    double SlimeRainTime;
+    uint8_t SundialCooldown;
+    uint8_t Raining;
+    uint32_t RainTime;
+    float MaxRain;
+    int32_t SavedOreTiersCobalt;
+    int32_t SavedOreTiersMythril;
+    int32_t SavedOreTiersAdamantite;
+    uint8_t BgTree;
+    uint8_t BgCorruption;
+    uint8_t BgJungle;
+    uint8_t BgSnow;
+    uint8_t BgHallow;
+    uint8_t BgCrimson;
+    uint8_t BgDesert;
+    uint8_t BgOcean;
+    int32_t CloudBgActive;
+    uint16_t NumClouds;
+    float WindSpeedSet;
+    uint32_t AnglerFinishedSize;
+    Base128Varint *Anglerfinished;
+    uint8_t SavedAngler;
+    uint32_t AnglerQuest;
+    uint8_t SavedStylist;
+    uint8_t SavedTaxCollector;
+    uint8_t SavedGolfer;
+    uint32_t InvasionSizeStart;
+    uint32_t CultistDelay;
+    uint16_t KillsCount;
+    uint32_t *Kills;
+    uint8_t FastForwardTime;
+    uint8_t DownedFishron;
+    uint8_t DownedMartians;
+    uint8_t DownedAncientCultist;
+    uint8_t DownedMoonlord;
+    uint8_t DownedHalloweenKing;
+    uint8_t DownedHalloweenTree;
+    uint8_t DownedChristmasIceQueen;
+    uint8_t DownedChristmasSantank;
+    uint8_t DownedChristmasTree;
+    uint8_t DownedTowerSolar;
+    uint8_t DownedTowerVortex;
+    uint8_t DownedTowerNebula;
+    uint8_t DownedTowerStardust;
+    uint8_t TowerActiveSolar;
+    uint8_t TowerActiveVortex;
+    uint8_t TowerActiveNebula;
+    uint8_t TowerActiveStardust;
+    uint8_t LunarApocalypseIsUp;
+    uint8_t PartyManual;
+    uint8_t PartyGenuine;
+    uint32_t PartyCooldown;
+    uint32_t PartyCelebratingNpcSize;
+    int32_t *PartyCelebratingNpcs;
+    uint8_t SandstormHappening;
+    uint32_t SandstormTimeLeft;
+    float SandstormSeverity;
+    float SandstormIntendedSeverity;
+
+    uint8_t SavedBartender;
+    uint8_t DownedInvasionT1;
+    uint8_t DownedInvasionT2;
+    uint8_t DownedInvasionT3;
+    uint8_t MushroomBg;
+    uint8_t UndergroundDesertBg;
+    uint8_t BgTree2;
+    uint8_t BgTree3;
+    uint8_t BgTree4;
+    uint8_t CombatBookUsed;
+    uint32_t LanternNightCooldown;
+    uint8_t LanternNightGenuine;
+    uint8_t LanternNightManual;
+    uint8_t LanternNightNextNightIsGenuine;
+    uint32_t TreetopSize;
+    int32_t *TreeTopVariations;
+    uint8_t ForceHalloweenForToday;
+    uint8_t ForceXMasForToday;
+    
+    uint32_t SavedOreTiersCopper;
+    uint32_t SavedOreTiersIron;
+    uint32_t SavedOreTiersSilver;
+    uint32_t SavedOreTiersGold;
+    uint8_t BoughtCat;
+    uint8_t BoughtDog;
+    uint8_t BoughtBunny;
+    uint8_t DownedEmpressOfLight;
+    uint8_t DownedQueenSlime;
+    uint8_t DownedDeerclops;
+    uint8_t UnlockedSlimeBlueSpawn;
+    uint8_t UnlockedMerchantSpawn;
+    uint8_t UnlockedDemolitionistSpawn;
+    uint8_t UnlockedPartyGirlSpawn;
+    uint8_t UnlockedDyeTraderSpawn;
+    uint8_t UnlockedTruffleSpawn;
+    uint8_t UnlockedArmsDealerSpawn;
+    uint8_t UnlockedNurseSpawn;
+    uint8_t UnlockedPrincessSpawn;
+    uint8_t CombatBookVolumeTwoWasUsed;
+    uint8_t PeddlersSatchelWasUsed;
+    uint8_t UnlockedSlimeGreenSpawn;
+    uint8_t UnlockedSlimeOldSpawn;
+    uint8_t UnlockedSlimePurpleSpawn;
+    uint8_t UnlockedSlimeRainbowSpawn;
+    uint8_t UnlockedSlimeRedSpawn;
+    uint8_t UnlockedSlimeYellowSpawn;
+    uint8_t UnlockedSlimeCopperSpawn;
+    uint8_t FastForwardTimeToDusk;
+    uint8_t MoondialCooldown;
+
+} Header;
+
+void parse_header(FILE *fp, Header *header,uint32_t *version, uint32_t format_end_position, uint32_t header_end_position) ;
+void print_header(Header *header);
+void write_header(FILE *fp, Header *header, Format *format);
+void free_header(Header *header);
+#endif
