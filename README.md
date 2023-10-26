@@ -21,7 +21,7 @@ This project is a tool that can convert images into pixel art specifically desig
 
 - `<wld_file>`: Terraria world file.
 - `<png_file>`: Image file to be converted.
-- `<files_dir>`: Directory to save the output results.
+- `<save_dir>`: Directory to save the output results.
 - `<ctile_array_file>`: CTile array file.
 - `<ctile_index_file>`: CTile index file.
 - `<pixel_pos_x>`: X-coordinate of the pixel art in the world.
