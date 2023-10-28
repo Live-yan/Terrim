@@ -196,9 +196,16 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     }
 
     int res = pixels_to_tiles_by_bin(image,&pixel_tiles,pixel_width,pixel_height,ctile_array_path,index_array_path);
-    // int res = pixels_to_tiles_by_thread(image_path,&pixel_tiles,&pxiel_width,&pixel_height,header.Width,header.Height,format.tileframeimportant, ".\\wld\\TempJson.json", FIND_BLOCK_ONLY);
     if (res !=0){
         printf("图片太大了，超出了地图大小  %d\n",res);
+        free_format(&format);
+        free_header(&header);
+        free(tiles_data);
+        free(other_data);
+        for (int i = 0;i<header.Width;i++){
+            free(tiles[i]);
+        }
+        free(image);
         return ;
     }
 
@@ -222,6 +229,19 @@ void create_pixels_worlds(const char *world_name,const char *image_path,const ch
     new_fp = topen(full_path, "wb");
     if (new_fp == NULL) {
         fprintf(stderr, "报错文件的时候出错: %s\n", full_path);
+        free_format(&format);
+        free_header(&header);
+        free(tiles_data);
+        free(other_data);
+        for (int i = 0;i<header.Width;i++){
+            free(tiles[i]);
+        }
+        free(image);
+        free(new_tiles_data);
+        for (int i = 0; i < pixel_width; i++) {
+            free(pixel_tiles[i]);
+        }
+        free(pixel_tiles);
         return ;
     }
 
